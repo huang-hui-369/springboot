@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -59,7 +60,8 @@ public class ShopRepository {
 
 	
 	public Shop selectRowMapper(int id) {
-		Shop shop = jdbcTemplate.queryForObject("select * from shop where id = ?", new ShopRowMapper(), id);
+		RowMapper<Shop> shopRowMapper = new BeanPropertyRowMapper<Shop>(Shop.class);
+		Shop shop = jdbcTemplate.queryForObject("select * from shop where id = ?", shopRowMapper, id);
 		return shop;
 	}
 	
@@ -77,6 +79,7 @@ public class ShopRepository {
 }
 
 
+// 有了BeanPropertyRowMapper，应该就不需要ShopRowMapper了
 class ShopRowMapper implements RowMapper<Shop> {
 
     @Override
